@@ -10,22 +10,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      # Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
+      # Install project dependencies
       - name: Install Dependencies
-        run: npm install
+        run: npm ci
 
+      # Build the project
       - name: Build Project
         run: npm run build
 
-      - name: Create ZIP
+      # Create deployment archive
+      - name: Create ZIP Archive
         run: zip -r site.zip dist
 
-      - name: Deploy
+      # Deploy to server
+      - name: Deploy Website
         run: |
-          curl \
-            -X POST \
+          curl -X POST \
             -H "Authorization: Bearer ${{ secrets.DEPLOY_TOKEN }}" \
             -F "file=@site.zip" \
             "${{ secrets.DEPLOY_URL }}"
